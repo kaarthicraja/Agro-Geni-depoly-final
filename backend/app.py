@@ -22,23 +22,45 @@ def health():
     return {"status": "Agro Geni backend is running", "version": "1.0"}
 
 # Register blueprints
-from .routes.auth_routes import auth_bp
-from .routes.farmer_routes import farmer_bp
-from .routes.buyer_routes import buyer_bp
-from .routes.godown_routes import godown_bp
-from .routes.booking_routes import booking_bp
-from .routes.ai_routes import ai_bp
-from .jobs.scheduler import init_scheduler
+try:
+    from .routes.auth_routes import auth_bp
+    app.register_blueprint(auth_bp, url_prefix='/api/auth')
+except Exception as e:
+    print(f"Auth routes could not be loaded: {e}")
 
-app.register_blueprint(auth_bp, url_prefix='/api/auth')
-app.register_blueprint(farmer_bp, url_prefix='/api/farmer')
-app.register_blueprint(buyer_bp, url_prefix='/api')
-app.register_blueprint(godown_bp, url_prefix='/api')
-app.register_blueprint(booking_bp, url_prefix='/api')
-app.register_blueprint(ai_bp, url_prefix='/api/ai')
+try:
+    from .routes.farmer_routes import farmer_bp
+    app.register_blueprint(farmer_bp, url_prefix='/api/farmer')
+except Exception as e:
+    print(f"Farmer routes could not be loaded: {e}")
+
+try:
+    from .routes.buyer_routes import buyer_bp
+    app.register_blueprint(buyer_bp, url_prefix='/api')
+except Exception as e:
+    print(f"Buyer routes could not be loaded: {e}")
+
+try:
+    from .routes.godown_routes import godown_bp
+    app.register_blueprint(godown_bp, url_prefix='/api')
+except Exception as e:
+    print(f"Godown routes could not be loaded: {e}")
+
+try:
+    from .routes.booking_routes import booking_bp
+    app.register_blueprint(booking_bp, url_prefix='/api')
+except Exception as e:
+    print(f"Booking routes could not be loaded: {e}")
+
+try:
+    from .routes.ai_routes import ai_bp
+    app.register_blueprint(ai_bp, url_prefix='/api/ai')
+except Exception as e:
+    print(f"AI routes could not be loaded: {e}")
 
 # Initialize the scheduler (Safe start)
 try:
+    from .jobs.scheduler import init_scheduler
     init_scheduler(app)
 except Exception as e:
     print(f"AI Scheduler could not start: {e}")
