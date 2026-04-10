@@ -7,6 +7,9 @@ services:
     buildCommand: npm install && npm run build && pip install -r backend/requirements.txt
     startCommand: python -m gunicorn --chdir backend app:app -w 4 -b 0.0.0.0:$PORT
     envVars:
+      - key: PYTHONPATH
+        value: /app
+    envVars:
       - key: NODE_ENV
         value: production
       - key: FLASK_ENV
