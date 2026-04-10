@@ -1,7 +1,5 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask import current_app
-from ..ai.ai_service import ai_service
-import pandas as pd
 
 def update_price_predictions():
     """
@@ -15,11 +13,14 @@ def update_price_predictions():
     pass
 
 def init_scheduler(app):
-    scheduler = BackgroundScheduler()
-    # Runs every day at midnight
-    scheduler.add_job(func=update_price_predictions, trigger="cron", hour=0)
-    scheduler.start()
-    
-    # Shut down the scheduler when the app exits
-    import atexit
-    atexit.register(lambda: scheduler.shutdown())
+    try:
+        scheduler = BackgroundScheduler()
+        # Runs every day at midnight
+        scheduler.add_job(func=update_price_predictions, trigger="cron", hour=0)
+        scheduler.start()
+        
+        # Shut down the scheduler when the app exits
+        import atexit
+        atexit.register(lambda: scheduler.shutdown())
+    except Exception as e:
+        print(f"Scheduler initialization failed (non-critical): {e}")
