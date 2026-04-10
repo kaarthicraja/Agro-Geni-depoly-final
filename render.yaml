@@ -3,9 +3,10 @@ services:
     name: agrogenix-app
     env: python
     plan: free
-    pythonVersion: 3.11
+    pythonVersion: 3.10.13
     buildCommand: npm install && npm run build && pip install -r backend/requirements.txt
     startCommand: gunicorn wsgi:app -w 4 -b 0.0.0.0:$PORT
+    envVars:
       - key: NODE_ENV
         value: production
       - key: FLASK_ENV
