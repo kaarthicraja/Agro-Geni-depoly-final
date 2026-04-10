@@ -7,6 +7,8 @@ services:
     buildCommand: npm install && npm run build && pip install -r backend/requirements.txt
     startCommand: gunicorn wsgi:app -w 2 -b 0.0.0.0:$PORT --timeout 120 --worker-class sync
     envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.13
       - key: NODE_ENV
         value: production
       - key: FLASK_ENV
