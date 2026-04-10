@@ -70,14 +70,17 @@ try:
 except Exception as e:
     print(f"AI Scheduler could not start: {e}")
 
-# Serve React App
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def serve(path):
-    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
-        return send_from_directory(app.static_folder, path)
-    else:
-        return send_from_directory(app.static_folder, 'index.html')
+# Serve React App and handle client-side routing
+@app.route('/')
+def serve():
+    return send_from_directory(app.static_folder, 'index.html')
+
+from flask import request
+@app.errorhandler(404)
+def not_found(e):
+    if request.path.startswith('/api/'):
+        return {"error": "Not found"}, 404
+    return send_from_directory(app.static_folder, 'index.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
