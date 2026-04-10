@@ -5,7 +5,7 @@ services:
     plan: free
     pythonVersion: 3.11
     buildCommand: npm install && npm run build && pip install -r backend/requirements.txt
-    startCommand: gunicorn -w 4 -b 0.0.0.0:$PORT backend.app:app
+    startCommand: cd backend && gunicorn -w 4 -b 0.0.0.0:$PORT app:app
     envVars:
       - key: NODE_ENV
         value: production
