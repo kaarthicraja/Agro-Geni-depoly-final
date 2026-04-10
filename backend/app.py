@@ -15,6 +15,12 @@ with app.app_context():
     except Exception as e:
         print(f"Database initialization skipped: {e}")
 jwt.init_app(app)
+
+# Health check route
+@app.route('/')
+def health():
+    return {"status": "Agro Geni backend is running", "version": "1.0"}
+
 # Register blueprints
 from .routes.auth_routes import auth_bp
 from .routes.farmer_routes import farmer_bp
