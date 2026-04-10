@@ -1,9 +1,13 @@
-from flask import Flask
+import os
+from flask import Flask, send_from_directory
 from flask_cors import CORS
 from .extensions import db, jwt
 from .config import Config
 
-app = Flask(__name__)
+basedir = os.path.abspath(os.path.dirname(__file__))
+dist_dir = os.path.join(basedir, '..', 'dist')
+
+app = Flask(__name__, static_folder=dist_dir, static_url_path='/')
 app.config.from_object(Config)
 CORS(app)
 
@@ -17,9 +21,10 @@ with app.app_context():
 jwt.init_app(app)
 
 # Health check route
-@app.route('/')
+@app.route('/api/health')
 def health():
     return {"status": "Agro Geni backend is running", "version": "1.0"}
+
 
 # Register blueprints
 try:
@@ -64,6 +69,15 @@ try:
     init_scheduler(app)
 except Exception as e:
     print(f"AI Scheduler could not start: {e}")
+
+# Serve React App
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
+    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
