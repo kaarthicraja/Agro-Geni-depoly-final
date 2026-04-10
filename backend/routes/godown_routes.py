@@ -1,10 +1,10 @@
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from extensions import db
-from models import Godown
-from utils.response import success, error
+from ..extensions import db
+from ..models import Godown
+from ..utils.response import success, error
 from datetime import datetime
-from middleware.roles import role_required
+from ..middleware.roles import role_required
 from sqlalchemy import desc, asc
 
 godown_bp = Blueprint('godown', __name__)

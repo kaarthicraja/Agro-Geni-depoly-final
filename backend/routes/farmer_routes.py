@@ -1,9 +1,9 @@
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from datetime import datetime
-from extensions import db
-from models import Crop
-from utils.response import success, error
+from ..extensions import db
+from ..models import Crop
+from ..utils.response import success, error
 from sqlalchemy import or_, and_, asc, desc
 
 farmer_bp = Blueprint('farmer', __name__)

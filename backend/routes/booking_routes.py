@@ -1,8 +1,8 @@
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from extensions import db
-from models import Booking, Godown
-from utils.response import success, error
+from ..extensions import db
+from ..models import Booking, Godown
+from ..utils.response import success, error
 from datetime import datetime
 from sqlalchemy import desc, asc
 from dateutil.parser import parse as parse_date

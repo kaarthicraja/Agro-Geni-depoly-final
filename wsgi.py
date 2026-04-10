@@ -1,18 +1,17 @@
+#!/usr/bin/env python
+"""
+WSGI entry point for Gunicorn.
+Uses relative imports in the backend package to ensure modules can find each other.
+"""
 import sys
-import os
 from pathlib import Path
 
-# Set the project directory
-project_dir = Path(__file__).parent
-sys.path.insert(0, str(project_dir))
-sys.path.insert(0, str(project_dir / "backend"))
+# Add the project root to sys.path as a safety measure
+project_root = Path(__file__).resolve().parent
+sys.path.insert(0, str(project_root))
 
-# Set environment variables if not already set
-if not os.getenv('FLASK_ENV'):
-    os.environ['FLASK_ENV'] = 'production'
-
-# Import and run the Flask app from backend
-from app import app
+# Import the Flask app from the backend package
+from backend.app import app
 
 if __name__ == "__main__":
     app.run()

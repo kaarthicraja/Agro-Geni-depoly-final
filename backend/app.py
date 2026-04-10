@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
-from extensions import db, jwt
-from config import Config
+from .extensions import db, jwt
+from .config import Config
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -9,17 +9,17 @@ CORS(app)
 
 db.init_app(app)
 with app.app_context():
-    from models import User, Godown, Booking
+    from .models import User, Godown, Booking
     db.create_all()
 jwt.init_app(app)
 # Register blueprints
-from routes.auth_routes import auth_bp
-from routes.farmer_routes import farmer_bp
-from routes.buyer_routes import buyer_bp
-from routes.godown_routes import godown_bp
-from routes.booking_routes import booking_bp
-from routes.ai_routes import ai_bp
-from jobs.scheduler import init_scheduler
+from .routes.auth_routes import auth_bp
+from .routes.farmer_routes import farmer_bp
+from .routes.buyer_routes import buyer_bp
+from .routes.godown_routes import godown_bp
+from .routes.booking_routes import booking_bp
+from .routes.ai_routes import ai_bp
+from .jobs.scheduler import init_scheduler
 
 app.register_blueprint(auth_bp, url_prefix='/api/auth')
 app.register_blueprint(farmer_bp, url_prefix='/api/farmer')

@@ -1,5 +1,5 @@
-from ai.price_predictor import PricePredictor
-from ai.spoilage_predictor import SpoilagePredictor
+from .price_predictor import PricePredictor
+from .spoilage_predictor import SpoilagePredictor
 
 class AIService:
     def __init__(self):

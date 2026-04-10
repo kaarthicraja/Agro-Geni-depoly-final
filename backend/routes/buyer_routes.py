@@ -1,9 +1,9 @@
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from datetime import datetime
-from extensions import db
-from models import Order, Crop
-from utils.response import success, error
+from ..extensions import db
+from ..models import Order, Crop
+from ..utils.response import success, error
 from sqlalchemy import desc, asc
 
 buyer_bp = Blueprint('buyer', __name__)

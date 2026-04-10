@@ -1,6 +1,6 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask import current_app
-from ai.ai_service import ai_service
+from ..ai.ai_service import ai_service
 import pandas as pd
 
 def update_price_predictions():
