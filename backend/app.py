@@ -9,8 +9,11 @@ CORS(app)
 
 db.init_app(app)
 with app.app_context():
-    from .models import User, Godown, Booking
-    db.create_all()
+    try:
+        from .models import User, Godown, Booking
+        db.create_all()
+    except Exception as e:
+        print(f"Database initialization skipped: {e}")
 jwt.init_app(app)
 # Register blueprints
 from .routes.auth_routes import auth_bp
