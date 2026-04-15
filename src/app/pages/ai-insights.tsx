@@ -43,18 +43,33 @@ export function AIInsights() {
       })
       .then(data => {
         setError(null);
-        // Format data for Recharts
-        const formatted = data.map((item: any) => {
+        // Format data for Recharts - data should be an array of forecast items
+        const forecastArray = Array.isArray(data) ? data : (data.forecast || []);
+        
+        const formatted = forecastArray.map((item: any) => {
           // Handle both standard ISO strings and MongoDB-style {$date: ...} objects
-          const rawDate = item.ds?.$date || item.ds;
+          const rawDate = item.ds?.$date || item.ds || item.date;
+          const dateObj = new Date(rawDate);
+          
+          // Check if date is valid
+          if (isNaN(dateObj.getTime())) {
+            console.warn("Invalid date:", rawDate);
+            return null;
+          }
+          
           return {
-            date: new Date(rawDate).toLocaleDateString(lang === 'ta' ? 'ta-IN' : 'en-IN', { day: 'numeric', month: 'short' }),
-            price: Math.round(item.yhat),
-            lower: Math.round(item.yhat_lower),
-            upper: Math.round(item.yhat_upper)
+            date: dateObj.toLocaleDateString(lang === 'ta' ? 'ta-IN' : 'en-IN', { day: 'numeric', month: 'short' }),
+            price: Math.round(item.yhat || item.price || 0),
+            lower: Math.round(item.yhat_lower || item.lower || 0),
+            upper: Math.round(item.yhat_upper || item.upper || 0)
           };
-        });
-        setPriceData(formatted);
+        }).filter((item: any) => item !== null);
+        
+        if (formatted.length === 0) {
+          setError("No forecast data available for the selected crop.");
+        } else {
+          setPriceData(formatted);
+        }
         setLoading(false);
       })
       .catch(err => {
@@ -131,7 +146,7 @@ export function AIInsights() {
                   <span className="font-bold text-lg mb-1">Server Disconnected</span>
                   <span className="text-sm opacity-80 max-w-sm">{error}</span>
                 </div>
-              ) : (
+              ) : priceData && priceData.length > 0 ? (
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={priceData}>
                     <defs>
@@ -169,6 +184,10 @@ export function AIInsights() {
                     />
                   </AreaChart>
                 </ResponsiveContainer>
+              ) : (
+                <div className="h-full w-full flex items-center justify-center bg-gray-50 rounded-xl">
+                  <span className="text-gray-500">{lang === 'ta' ? 'தரவு கிடைக்கவில்லை' : 'No forecast data available'}</span>
+                </div>
               )}
             </div>
           </div>
